@@ -5,14 +5,38 @@ const showModal = ref(false);
 
 //Using two-way binding; if state changes, view is updated. If view is updated,
 //state changes.
-const newNote = ref("Hello");
+const newNote = ref("");
+
+const currentId = ref(0);
+
+//Reference to all notes created
+const notes = ref([]);
+const currentNote = ref("");
+
+function getRandomColor() {
+  return "hsl(" + Math.random() * 360 + ", 100%, 75%)";
+}
+
+const addNote = () => {
+  const idNum = currentId.value;
+
+  notes.value.push({
+    id: idNum,
+    text: newNote.value,
+    date: new Date(),
+    backgroundColor: getRandomColor(),
+  });
+
+  currentId.value++;
+  showModal.value = false;
+  newNote.value = "";
+};
 </script>
 
 <template>
   <main>
     <div v-show="showModal" class="overlay">
       <div class="modal">
-        {{ newNote }}
         <!-- v-mode directive for two-way binding -->
         <textarea
           v-model="newNote"
@@ -21,42 +45,19 @@ const newNote = ref("Hello");
           cols="30"
           rows="10"
         ></textarea>
-        <button>Add Note</button>
+        <button @click="addNote()">Add Note</button>
         <button class="close" @click="showModal = false">Close</button>
       </div>
     </div>
 
     <div class="container">
+      {{ notes }}
       <header>
-        <h1>Notes {{ showModal }}</h1>
+        <h1>Notes</h1>
         <button @click="showModal = true">+</button>
       </header>
 
       <div class="cards-container">
-        <div class="card">
-          <p class="main-text">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Id quia
-            tempora ad? Placeat, magnam accusantium!
-          </p>
-          <p class="date">04/27/2022</p>
-        </div>
-
-        <div class="card">
-          <p class="main-text">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Id quia
-            tempora ad? Placeat, magnam accusantium!
-          </p>
-          <p class="date">04/27/2022</p>
-        </div>
-
-        <div class="card">
-          <p class="main-text">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Id quia
-            tempora ad? Placeat, magnam accusantium!
-          </p>
-          <p class="date">04/27/2022</p>
-        </div>
-
         <div class="card">
           <p class="main-text">
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Id quia
