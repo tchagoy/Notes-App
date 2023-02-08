@@ -11,7 +11,6 @@ const currentId = ref(0);
 
 //Reference to all notes created
 const notes = ref([]);
-const currentNote = ref("");
 
 function getRandomColor() {
   return "hsl(" + Math.random() * 360 + ", 100%, 75%)";
@@ -51,19 +50,22 @@ const addNote = () => {
     </div>
 
     <div class="container">
-      {{ notes }}
       <header>
         <h1>Notes</h1>
         <button @click="showModal = true">+</button>
       </header>
 
       <div class="cards-container">
-        <div class="card">
+        <div
+          v-for="note in notes"
+          :key="note.id"
+          class="card"
+          :style="{ backgroundColor: note.backgroundColor }"
+        >
           <p class="main-text">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Id quia
-            tempora ad? Placeat, magnam accusantium!
+            {{ note.text }}
           </p>
-          <p class="date">04/27/2022</p>
+          <p class="date">{{ note.date.toDateString() }}</p>
         </div>
       </div>
     </div>
