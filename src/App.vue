@@ -2,13 +2,25 @@
 import { ref } from "vue";
 
 const showModal = ref(false);
+
+//Using two-way binding; if state changes, view is updated. If view is updated,
+//state changes.
+const newNote = ref("Hello");
 </script>
 
 <template>
   <main>
     <div v-show="showModal" class="overlay">
       <div class="modal">
-        <textarea name="note" id="note" cols="30" rows="10"></textarea>
+        {{ newNote }}
+        <!-- v-mode directive for two-way binding -->
+        <textarea
+          v-model="newNote"
+          name="note"
+          id="note"
+          cols="30"
+          rows="10"
+        ></textarea>
         <button>Add Note</button>
         <button class="close" @click="showModal = false">Close</button>
       </div>
