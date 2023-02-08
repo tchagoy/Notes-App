@@ -6,6 +6,7 @@ const showModal = ref(false);
 //Using two-way binding; if state changes, view is updated. If view is updated,
 //state changes.
 const newNote = ref("");
+const errorMessage = ref("");
 
 const currentId = ref(0);
 
@@ -19,6 +20,10 @@ function getRandomColor() {
 const addNote = () => {
   const idNum = currentId.value;
 
+  if (newNote.value.length < 10) {
+    return (errorMessage.value = "A note needs to be 10 characters or more");
+  }
+
   notes.value.push({
     id: idNum,
     text: newNote.value,
@@ -29,6 +34,7 @@ const addNote = () => {
   currentId.value++;
   showModal.value = false;
   newNote.value = "";
+  errorMessage.value = "";
 };
 </script>
 
@@ -38,12 +44,13 @@ const addNote = () => {
       <div class="modal">
         <!-- v-mode directive for two-way binding -->
         <textarea
-          v-model="newNote"
+          v-model.trim="newNote"
           name="note"
           id="note"
           cols="30"
           rows="10"
         ></textarea>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
         <button @click="addNote()">Add Note</button>
         <button class="close" @click="showModal = false">Close</button>
       </div>
@@ -62,6 +69,9 @@ const addNote = () => {
           class="card"
           :style="{ backgroundColor: note.backgroundColor }"
         >
+          <button class="close-button" data-close>
+            <span aria-hidden="true">&times;</span>
+          </button>
           <p class="main-text">
             {{ note.text }}
           </p>
@@ -122,6 +132,26 @@ header button {
   color: black;
 }
 
+.card .close-button {
+  position: absolute;
+  width: 10%;
+  float: right;
+  left: 85%;
+  background-color: gray;
+  border: none;
+  border-radius: 20%;
+}
+
+.card .close-button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.card .close-button:hover {
+  background-color: red;
+}
+
 .cards-container {
   display: flex;
   flex-flow: wrap;
@@ -130,6 +160,7 @@ header button {
 .date {
   font-size: 12.5px;
   font-weight: bold;
+  display: flex;
 }
 
 .overlay {
@@ -171,5 +202,9 @@ header button {
 .modal .close {
   background-color: rgb(193, 15, 15);
   margin-top: 7px;
+}
+
+.modal p {
+  color: red;
 }
 </style>
